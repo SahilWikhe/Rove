@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { pilotContactHref } from './site-config';
+import JourneyArtwork from './journey-artwork';
 
 const stages = [
   {
@@ -630,6 +631,7 @@ export default function RoveLanding() {
               We’re making the ride to recurring care feel like it belongs.
             </p>
           </div>
+          <JourneyArtwork />
           <a className="subtle-link" href="#journey">
             Step inside the experience <ArrowDown size={16} />
           </a>

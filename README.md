@@ -25,6 +25,7 @@ pnpm start
 - A compact sticky sequence on mobile: scrolling scrubs through all three app scenes, with tabs as an alternate control.
 - Reduced-motion support removes parallax and scroll scrubbing while retaining every scene through the tabs.
 - Supporting page motion includes card entrances, a scroll-lit purpose headline, and an expanding gold closing section with a masked title reveal. Reduced-motion preferences keep all text visible without animation.
+- A custom gold round-trip graphic blends original artwork into the page with moving SVG signals and subtle light sweeps. Its composition stays anchored without cursor tracking or visible playback controls. It pauses offscreen and in hidden tabs and respects reduced-motion settings. See [artwork details](docs/motion-artwork.md).
 - Purpose and audience sections, followed by a North Carolina pilot introduction.
 - No booking, billing, tracking service, analytics, or contact collection. All app screens and journey data are illustrative.
 

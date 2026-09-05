@@ -317,6 +317,9 @@ export default function RoveLanding() {
   const rootRef = useRef<HTMLDivElement>(null);
   const journeyRef = useRef<HTMLElement>(null);
   const stageRef = useRef(0);
+  const introRef = useRef<HTMLElement>(null);
+  const manifestoRef = useRef<HTMLElement>(null);
+  const pilotRef = useRef<HTMLElement>(null);
   const showcaseRef = useRef<HTMLElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const [stage, setStage] = useState(0);
@@ -329,7 +332,8 @@ export default function RoveLanding() {
     const journey = journeyRef.current;
     const showcase = showcaseRef.current;
     const sticky = journey?.querySelector<HTMLElement>('.journey-sticky');
-    if (!root || !journey || !showcase || !sticky) return;
+    const hero = root?.querySelector<HTMLElement>('.hero');
+    if (!root || !journey || !showcase || !sticky || !hero) return;
 
     const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
     const clamp = (value: number) => Math.max(0, Math.min(1, value));
@@ -347,6 +351,9 @@ export default function RoveLanding() {
       length: path.getTotalLength(),
       returning: path.dataset.routeLine === '2',
     }));
+    const manifestoLines = Array.from(
+      root.querySelectorAll<HTMLElement>('.manifesto-line'),
+    );
     let frame = 0;
     let lastSolid = false;
     const update = () => {
@@ -358,8 +365,11 @@ export default function RoveLanding() {
         -box.top / Math.max(1, journey.offsetHeight - sticky.offsetHeight),
       );
       const entry = smooth(height, 0, box.top);
-      const heroProgress = Math.min(1, window.scrollY / height);
-      root.style.setProperty('--hero-progress', String(heroProgress));
+      const heroProgress = clamp(window.scrollY / hero.offsetHeight);
+      hero.style.setProperty(
+        '--hero-progress',
+        String(motion.matches ? 0 : heroProgress),
+      );
       if (!motion.matches) {
         const first = smooth(0.28, 0.38, progress);
         const second = smooth(0.61, 0.71, progress);
@@ -404,8 +414,30 @@ export default function RoveLanding() {
           );
           route.path.style.strokeDashoffset = String(1 - amount);
         }
+        if (introRef.current) {
+          const rect = introRef.current.getBoundingClientRect();
+          const amount = smooth(height * 0.9, height * 0.16, rect.top);
+          introRef.current.style.setProperty('--intro-reveal', String(amount));
+        }
+        if (manifestoRef.current) {
+          const rect = manifestoRef.current.getBoundingClientRect();
+          const amount = smooth(height * 0.85, height * 0.08, rect.top);
+          manifestoLines.forEach((line, index) => {
+            line.style.setProperty(
+              '--line-progress',
+              String(smooth(index * 0.17, index * 0.17 + 0.4, amount)),
+            );
+          });
+        }
+        if (pilotRef.current) {
+          const rect = pilotRef.current.getBoundingClientRect();
+          pilotRef.current.style.setProperty(
+            '--pilot-entry',
+            String(smooth(height * 0.95, height * 0.15, rect.top)),
+          );
+        }
       }
-      const solid = window.scrollY > height * 0.75;
+      const solid = window.scrollY > hero.offsetHeight * 0.75;
       if (lastSolid !== solid) {
         lastSolid = solid;
         setNavSolid(solid);
@@ -557,9 +589,14 @@ export default function RoveLanding() {
               TRANSPORTATION
             </p>
             <h1>
-              A better way
-              <br />
-              to <span>get there.</span>
+              <span className="hero-title-line">
+                <span>A better way</span>
+              </span>
+              <span className="hero-title-line">
+                <span>
+                  to <em>get there.</em>
+                </span>
+              </span>
             </h1>
             <p className="hero-description">
               Life has places for you to be.
@@ -579,7 +616,7 @@ export default function RoveLanding() {
           </div>
         </section>
 
-        <section className="intro" id="experience">
+        <section className="intro" id="experience" ref={introRef}>
           <div className="reveal">
             <p className="eyebrow">INTRODUCING ROVE</p>
             <h2>
@@ -795,19 +832,20 @@ export default function RoveLanding() {
           </div>
         </section>
 
-        <section className="manifesto section-wrap">
+        <section className="manifesto section-wrap" ref={manifestoRef}>
           <div className="manifesto-heading reveal">
             <p className="eyebrow">WHY WE’RE HERE</p>
-            <h2>
-              The appointment
-              <br />
-              is important.
-              <br />
-              <span>
-                So is the life
-                <br />
-                around it.
-              </span>
+            <h2 aria-label="The appointment is important. So is the life around it.">
+              {[
+                'The appointment',
+                'is important.',
+                'So is the life',
+                'around it.',
+              ].map((line) => (
+                <span className="manifesto-line" aria-hidden="true" key={line}>
+                  {line}
+                </span>
+              ))}
             </h2>
           </div>
           <div className="manifesto-copy reveal">
@@ -827,15 +865,18 @@ export default function RoveLanding() {
           </div>
         </section>
 
-        <section className="pilot" id="pilot">
+        <section className="pilot" id="pilot" ref={pilotRef}>
           <div className="pilot-content reveal">
             <p className="eyebrow">
               <span className="status-dot" /> OUR FIRST CHAPTER · NORTH CAROLINA
             </p>
-            <h2>
-              Let’s move
-              <br />
-              care forward.
+            <h2 aria-label="Let’s move care forward.">
+              <span className="pilot-title-line" aria-hidden="true">
+                <span>Let’s move</span>
+              </span>
+              <span className="pilot-title-line" aria-hidden="true">
+                <span>care forward.</span>
+              </span>
             </h2>
             <p>
               We’re developing Rove alongside the people who understand

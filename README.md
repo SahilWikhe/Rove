@@ -20,10 +20,11 @@ pnpm start
 
 ## Design and behavior
 
-- A cinematic, locally stored WebP hero with gentle scroll parallax.
+- A cinematic, locally stored WebP hero with parallax, staggered title reveals, and scroll-linked lighting.
 - A sticky desktop product story: Plan, Ride, and Return. Native page scrolling drives scene changes, and keyboard-accessible tabs can select a scene.
 - A compact sticky sequence on mobile: scrolling scrubs through all three app scenes, with tabs as an alternate control.
 - Reduced-motion support removes parallax and scroll scrubbing while retaining every scene through the tabs.
+- Supporting page motion includes card entrances, a scroll-lit purpose headline, and an expanding gold closing section with a masked title reveal. Reduced-motion preferences keep all text visible without animation.
 - Purpose and audience sections, followed by a North Carolina pilot introduction.
 - No booking, billing, tracking service, analytics, or contact collection. All app screens and journey data are illustrative.
 

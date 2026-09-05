@@ -73,19 +73,13 @@ const stages = [
   },
 ];
 
-function RouteMap({
-  stage = 1,
-  small = false,
-}: {
-  stage?: number;
-  small?: boolean;
-}) {
+function RouteMap({ stage }: { stage: number }) {
   return (
-    <div className={`route-map ${small ? 'map-small' : ''}`} aria-hidden="true">
+    <div className="route-map" aria-hidden="true">
       <svg viewBox="0 0 420 340" fill="none" className="map-lines">
         <defs>
           <linearGradient
-            id={small ? 'route-small' : 'route-gold'}
+            id={`route-gold-${stage}`}
             x1="78"
             y1="270"
             x2="320"
@@ -121,8 +115,9 @@ function RouteMap({
         />
         <path
           className="gold-route"
+          data-route-line={stage}
           d="M80 258V133Q80 111 102 111H155L192 150H235Q260 150 260 126V73"
-          stroke={`url(#${small ? 'route-small' : 'route-gold'})`}
+          stroke={`url(#route-gold-${stage})`}
           strokeWidth="4"
           strokeLinecap="round"
           pathLength="1"
@@ -131,7 +126,11 @@ function RouteMap({
         <circle cx="80" cy="258" r="5" fill="#edca78" />
         <circle cx="260" cy="73" r="13" fill="#edca78" fillOpacity=".16" />
         <circle cx="260" cy="73" r="6" fill="#edca78" />
-        <g className={`map-car car-stage-${stage}`}>
+        <g
+          className="map-car"
+          data-route-car={stage}
+          transform={stage === 1 ? 'translate(80 258)' : 'translate(260 73)'}
+        >
           <circle cx="0" cy="0" r="19" fill="#edca78" fillOpacity=".08" />
           <rect x="-8" y="-13" width="16" height="27" rx="5" fill="#ead5a1" />
           <rect x="-5" y="-6" width="10" height="10" rx="2" fill="#20251d" />
@@ -144,7 +143,7 @@ function RouteMap({
   );
 }
 
-function AppPhone({ stage }: { stage: number }) {
+function AppPhone() {
   return (
     <div className="phone-frame" aria-hidden="true">
       <div className="phone-button" />
@@ -166,129 +165,133 @@ function AppPhone({ stage }: { stage: number }) {
             <CircleUserRound size={22} />
           </span>
         </div>
-        <div className="app-scene" key={stage}>
-          {stage === 0 ? (
-            <>
-              <div className="app-greeting">
-                <p>Good morning.</p>
-                <h3>
-                  A little less
-                  <br />
-                  on your mind.
-                </h3>
-              </div>
-              <div className="week-picker">
-                {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((day, i) => (
-                  <div
-                    className={
-                      i === 0 || i === 2 || i === 4 ? 'day planned' : 'day'
-                    }
-                    key={i}
-                  >
-                    <span>{day}</span>
-                    <b>{7 + i}</b>
-                    <i />
-                  </div>
-                ))}
-              </div>
-              <div className="app-ride-card">
-                <div className="app-card-top">
-                  <span>YOUR NEXT RIDE</span>
-                  <span className="mini-badge">
-                    <Check size={10} /> Planned
-                  </span>
-                </div>
-                <div className="app-time">
-                  7:15 <span>AM</span>
-                </div>
-                <p className="app-day">Monday, September 7</p>
-                <div className="app-stops">
-                  <div>
-                    <span className="stop-dot" />
-                    <span>Home</span>
-                  </div>
-                  <div>
-                    <MapPin size={13} />
-                    <span>Your care center</span>
-                  </div>
-                </div>
-                <div className="recurrence">
-                  <CalendarDays size={14} /> Every Mon, Wed & Fri
-                </div>
-              </div>
-              <div className="app-hint">
-                <ShieldCheck size={18} />
-                <span>Your return is part of the plan.</span>
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="app-greeting">
-                <p>
-                  {stage === 1
-                    ? 'Your ride, at a glance.'
-                    : 'The other half of the journey.'}
-                </p>
-                <h3>
-                  {stage === 1 ? (
-                    <>
-                      On the way.
+        <div className="app-scenes">
+          {[0, 1, 2].map((stage) => (
+            <div className={`app-scene app-scene-${stage}`} key={stage}>
+              {stage === 0 ? (
+                <>
+                  <div className="app-greeting">
+                    <p>Good morning.</p>
+                    <h3>
+                      A little less
                       <br />
-                      Right on your screen.
-                    </>
-                  ) : (
-                    <>
-                      Care, done.
-                      <br />
-                      Home, next.
-                    </>
-                  )}
-                </h3>
-              </div>
-              <RouteMap stage={stage} />
-              <div className="tracking-card">
-                <div className="tracking-title">
-                  <div>
-                    <span className="tracking-eyebrow">
-                      {stage === 1 ? 'PICKUP WINDOW' : 'RETURN JOURNEY'}
-                    </span>
-                    <h4>
-                      {stage === 1 ? '7:15–7:25 AM' : 'Let’s get you home.'}
-                    </h4>
+                      on your mind.
+                    </h3>
                   </div>
-                  <span className="tracking-icon">
-                    {stage === 1 ? (
-                      <Navigation size={22} />
-                    ) : (
-                      <Home size={22} />
-                    )}
-                  </span>
-                </div>
-                <div className="driver-row">
-                  <span className="driver-avatar">
-                    <CircleUserRound size={29} />
-                  </span>
-                  <div>
-                    <strong>
-                      {stage === 1
-                        ? 'Meet your driver'
-                        : 'Your return, coordinated'}
-                    </strong>
-                    <span>
-                      {stage === 1
-                        ? 'Vehicle and arrival details'
-                        : 'Updates for you and your care team'}
-                    </span>
+                  <div className="week-picker">
+                    {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((day, i) => (
+                      <div
+                        className={
+                          i === 0 || i === 2 || i === 4 ? 'day planned' : 'day'
+                        }
+                        key={i}
+                      >
+                        <span>{day}</span>
+                        <b>{7 + i}</b>
+                        <i />
+                      </div>
+                    ))}
                   </div>
-                  <ChevronRight size={16} />
-                </div>
-                <div className="app-action">
-                  {stage === 1 ? 'Follow your ride' : 'View return plan'}
-                  <ArrowRight size={15} />
-                </div>
-              </div>
-            </>
-          )}
+                  <div className="app-ride-card">
+                    <div className="app-card-top">
+                      <span>YOUR NEXT RIDE</span>
+                      <span className="mini-badge">
+                        <Check size={10} /> Planned
+                      </span>
+                    </div>
+                    <div className="app-time">
+                      7:15 <span>AM</span>
+                    </div>
+                    <p className="app-day">Monday, September 7</p>
+                    <div className="app-stops">
+                      <div>
+                        <span className="stop-dot" />
+                        <span>Home</span>
+                      </div>
+                      <div>
+                        <MapPin size={13} />
+                        <span>Your care center</span>
+                      </div>
+                    </div>
+                    <div className="recurrence">
+                      <CalendarDays size={14} /> Every Mon, Wed & Fri
+                    </div>
+                  </div>
+                  <div className="app-hint">
+                    <ShieldCheck size={18} />
+                    <span>Your return is part of the plan.</span>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="app-greeting">
+                    <p>
+                      {stage === 1
+                        ? 'Your ride, at a glance.'
+                        : 'The other half of the journey.'}
+                    </p>
+                    <h3>
+                      {stage === 1 ? (
+                        <>
+                          On the way.
+                          <br />
+                          Right on your screen.
+                        </>
+                      ) : (
+                        <>
+                          Care, done.
+                          <br />
+                          Home, next.
+                        </>
+                      )}
+                    </h3>
+                  </div>
+                  <RouteMap stage={stage} />
+                  <div className="tracking-card">
+                    <div className="tracking-title">
+                      <div>
+                        <span className="tracking-eyebrow">
+                          {stage === 1 ? 'PICKUP WINDOW' : 'RETURN JOURNEY'}
+                        </span>
+                        <h4>
+                          {stage === 1 ? '7:15–7:25 AM' : 'Let’s get you home.'}
+                        </h4>
+                      </div>
+                      <span className="tracking-icon">
+                        {stage === 1 ? (
+                          <Navigation size={22} />
+                        ) : (
+                          <Home size={22} />
+                        )}
+                      </span>
+                    </div>
+                    <div className="driver-row">
+                      <span className="driver-avatar">
+                        <CircleUserRound size={29} />
+                      </span>
+                      <div>
+                        <strong>
+                          {stage === 1
+                            ? 'Meet your driver'
+                            : 'Your return, coordinated'}
+                        </strong>
+                        <span>
+                          {stage === 1
+                            ? 'Vehicle and arrival details'
+                            : 'Updates for you and your care team'}
+                        </span>
+                      </div>
+                      <ChevronRight size={16} />
+                    </div>
+                    <div className="app-action">
+                      {stage === 1 ? 'Follow your ride' : 'View return plan'}
+                      <ArrowRight size={15} />
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+          ))}
         </div>
         <div className="app-nav">
           <span className="selected">
@@ -314,6 +317,7 @@ export default function RoveLanding() {
   const rootRef = useRef<HTMLDivElement>(null);
   const journeyRef = useRef<HTMLElement>(null);
   const stageRef = useRef(0);
+  const showcaseRef = useRef<HTMLElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const [stage, setStage] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -321,50 +325,120 @@ export default function RoveLanding() {
   const [navSolid, setNavSolid] = useState(false);
 
   useEffect(() => {
+    const root = rootRef.current;
+    const journey = journeyRef.current;
+    const showcase = showcaseRef.current;
+    const sticky = journey?.querySelector<HTMLElement>('.journey-sticky');
+    if (!root || !journey || !showcase || !sticky) return;
+
     const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const updateMotion = () => setReducedMotion(motion.matches);
-    rootRef.current?.classList.add('js-ready');
-    updateMotion();
-    motion.addEventListener('change', updateMotion);
+    const clamp = (value: number) => Math.max(0, Math.min(1, value));
+    const smooth = (from: number, to: number, value: number) => {
+      const t = clamp((value - from) / (to - from));
+      return t * t * (3 - 2 * t);
+    };
+    const routes = Array.from(
+      journey.querySelectorAll<SVGPathElement>('[data-route-line]'),
+    ).map((path) => ({
+      path,
+      car: journey.querySelector<SVGGElement>(
+        `[data-route-car="${path.dataset.routeLine}"]`,
+      ),
+      length: path.getTotalLength(),
+      returning: path.dataset.routeLine === '2',
+    }));
     let frame = 0;
     let lastSolid = false;
     const update = () => {
       frame = 0;
-      const root = rootRef.current,
-        journey = journeyRef.current;
-      if (!root || !journey) return;
       const height = window.innerHeight;
+      // Use the actual sticky height, not the changing mobile browser viewport.
+      const box = journey.getBoundingClientRect();
+      const progress = clamp(
+        -box.top / Math.max(1, journey.offsetHeight - sticky.offsetHeight),
+      );
+      const entry = smooth(height, 0, box.top);
       const heroProgress = Math.min(1, window.scrollY / height);
       root.style.setProperty('--hero-progress', String(heroProgress));
-      const box = journey.getBoundingClientRect();
-      const progress = Math.max(
-        0,
-        Math.min(1, -box.top / Math.max(1, box.height - height)),
-      );
-      root.style.setProperty('--journey-progress', String(progress));
-      const entry = Math.max(
-        0,
-        Math.min(1, (height - box.top) / (height * 0.95)),
-      );
-      root.style.setProperty('--phone-entry', String(entry));
+      if (!motion.matches) {
+        const first = smooth(0.28, 0.38, progress);
+        const second = smooth(0.61, 0.71, progress);
+        journey.style.setProperty('--journey-progress', String(progress));
+        journey.style.setProperty('--phone-entry', String(entry));
+        journey.style.setProperty('--scene-plan', String(1 - first));
+        journey.style.setProperty('--scene-ride', String(first * (1 - second)));
+        journey.style.setProperty('--scene-return', String(second));
+        journey.style.setProperty(
+          '--phone-yaw',
+          `${Math.sin(progress * Math.PI * 2) * 5}deg`,
+        );
+        journey.style.setProperty(
+          '--phone-lift',
+          `${Math.sin(progress * Math.PI * 2) * -11}px`,
+        );
+        journey.style.setProperty('--light-position', `${15 + progress * 80}%`);
+        const next = progress < 0.33 ? 0 : progress < 0.66 ? 1 : 2;
+        if (next !== stageRef.current) {
+          stageRef.current = next;
+          setStage(next);
+        }
+        for (const route of routes) {
+          const amount = route.returning
+            ? 1 - smooth(0.65, 0.96, progress)
+            : smooth(0.3, 0.63, progress);
+          const point = route.path.getPointAtLength(amount * route.length);
+          const ahead = route.path.getPointAtLength(
+            Math.min(route.length, amount * route.length + 1),
+          );
+          const behind = route.path.getPointAtLength(
+            Math.max(0, amount * route.length - 1),
+          );
+          const angle =
+            (Math.atan2(ahead.y - behind.y, ahead.x - behind.x) * 180) /
+              Math.PI +
+            90 +
+            (route.returning ? 180 : 0);
+          route.car?.setAttribute(
+            'transform',
+            `translate(${point.x} ${point.y}) rotate(${angle})`,
+          );
+          route.path.style.strokeDashoffset = String(1 - amount);
+        }
+      }
       const solid = window.scrollY > height * 0.75;
       if (lastSolid !== solid) {
         lastSolid = solid;
         setNavSolid(solid);
       }
-      if (!motion.matches && window.innerWidth > 800) {
-        const next = progress < 0.34 ? 0 : progress < 0.67 ? 1 : 2;
-        if (next !== stageRef.current) {
-          stageRef.current = next;
-          setStage(next);
-        }
-      }
     };
     const requestUpdate = () => {
       if (!frame) frame = requestAnimationFrame(update);
     };
+    const fitPhone = () => {
+      // Fits the complete device between the copy and progress indicator on any screen.
+      const scale = Math.min(
+        1,
+        (showcase.clientHeight - 40) / 646,
+        (showcase.clientWidth - 38) / 360,
+      );
+      journey.style.setProperty(
+        '--device-scale',
+        String(Math.max(0.25, scale)),
+      );
+      requestUpdate();
+    };
+    const updateMotion = () => {
+      setReducedMotion(motion.matches);
+      fitPhone();
+    };
+    updateMotion();
+    root.classList.add('js-ready');
+    motion.addEventListener('change', updateMotion);
     window.addEventListener('scroll', requestUpdate, { passive: true });
-    window.addEventListener('resize', requestUpdate);
+    window.addEventListener('resize', fitPhone);
+    const resizeObserver = new ResizeObserver(fitPhone);
+    resizeObserver.observe(showcase);
+    resizeObserver.observe(sticky);
     update();
     const observer = new IntersectionObserver(
       (entries) => {
@@ -377,14 +451,14 @@ export default function RoveLanding() {
       },
       { threshold: 0.13 },
     );
-    const targets = rootRef.current?.querySelectorAll('.reveal');
-    targets?.forEach((el) => observer.observe(el));
+    root.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
     return () => {
       window.removeEventListener('scroll', requestUpdate);
-      window.removeEventListener('resize', requestUpdate);
+      window.removeEventListener('resize', fitPhone);
       motion.removeEventListener('change', updateMotion);
       cancelAnimationFrame(frame);
       observer.disconnect();
+      resizeObserver.disconnect();
     };
   }, []);
 
@@ -405,14 +479,17 @@ export default function RoveLanding() {
     if (!Number.isInteger(next) || next < 0 || next > 2) return;
     stageRef.current = next;
     setStage(next);
-    if (!reducedMotion && window.innerWidth > 800 && journeyRef.current) {
+    if (!reducedMotion && journeyRef.current) {
       const el = journeyRef.current;
       const positions = [0.12, 0.48, 0.82];
       window.scrollTo({
         top:
           window.scrollY +
           el.getBoundingClientRect().top +
-          (el.offsetHeight - window.innerHeight) * positions[next],
+          (el.offsetHeight -
+            (el.querySelector<HTMLElement>('.journey-sticky')?.offsetHeight ??
+              window.innerHeight)) *
+            positions[next],
         behavior: 'instant',
       });
     }
@@ -422,7 +499,7 @@ export default function RoveLanding() {
   const DetailIcon = detail.icon;
 
   return (
-    <div ref={rootRef} className="rove-site">
+    <div ref={rootRef} className="rove-site" data-stage={stage}>
       <a className="skip-link" href="#main">
         Skip to content
       </a>
@@ -576,10 +653,10 @@ export default function RoveLanding() {
                   A look at what’s ahead. Illustrative app concept.
                 </p>
               </div>
-              <figure className="phone-showcase">
+              <figure className="phone-showcase" ref={showcaseRef}>
                 <div className="phone-halo" />
                 <div className="phone-assembly">
-                  <AppPhone stage={stage} />
+                  <AppPhone />
                   <div className={`floating-note note-${stage}`} key={stage}>
                     {stage === 0 ? (
                       <CalendarDays size={21} />

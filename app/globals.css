@@ -1855,6 +1855,292 @@ footer {
     font-size: 14px;
   }
 }
+/* One native-scroll timeline drives both desktop and phone experiences. */
+.journey {
+  --scene-plan: 1;
+  --scene-ride: 0;
+  --scene-return: 0;
+  --phone-yaw: 0deg;
+  --phone-lift: 0px;
+  --light-position: 15%;
+}
+.journey-sticky {
+  min-height: 0;
+}
+.journey-atmosphere {
+  transform: translateX(calc(-30px + 60px * var(--journey-progress)));
+  background: radial-gradient(ellipse at 69% 52%, #ad864131, transparent 55%);
+}
+.phone-showcase {
+  min-height: 0;
+  padding-bottom: 20px;
+}
+.phone-assembly {
+  transform: translate3d(
+      0,
+      calc(50px * (1 - var(--phone-entry)) + var(--phone-lift)),
+      0
+    )
+    rotateX(calc(10deg * (1 - var(--phone-entry)))) rotateY(var(--phone-yaw))
+    rotateZ(calc(-5deg * (1 - var(--phone-entry))))
+    scale(calc(var(--device-scale) * (0.94 + 0.06 * var(--phone-entry))));
+}
+.phone-halo {
+  transform: scale(calc(0.82 + 0.18 * var(--phone-entry)))
+    rotate(calc(80deg * var(--journey-progress)));
+}
+.phone-halo:after {
+  content: '';
+  position: absolute;
+  inset: -55px;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  background: conic-gradient(
+      from 30deg,
+      transparent 65%,
+      #edca7833,
+      transparent 88%
+    )
+    border-box;
+  mask:
+    linear-gradient(#000 0 0) padding-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+}
+.phone-frame:after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    115deg,
+    transparent 25%,
+    #fff1bd08 40%,
+    #fff1bd22 45%,
+    transparent 60%
+  );
+  background-size: 300% 100%;
+  background-position: var(--light-position) 0;
+  pointer-events: none;
+  z-index: 7;
+}
+.app-scenes {
+  position: relative;
+  height: 465px;
+}
+.app-scene {
+  position: absolute;
+  inset: 0;
+  animation: none;
+  pointer-events: none;
+  will-change: opacity, transform;
+}
+.app-scene-0 {
+  opacity: var(--scene-plan);
+  transform: translateY(calc(-28px * (1 - var(--scene-plan))));
+}
+.app-scene-1 {
+  opacity: var(--scene-ride);
+  transform: translateY(calc(24px * (1 - var(--scene-ride))));
+}
+.app-scene-2 {
+  opacity: var(--scene-return);
+  transform: translateY(calc(24px * (1 - var(--scene-return))));
+}
+.app-greeting h3 {
+  font-size: 24px;
+  line-height: 1.14;
+}
+.week-picker {
+  margin: 16px 22px 12px;
+}
+.day {
+  padding: 6px 0;
+  gap: 5px;
+}
+.app-time {
+  font-size: 40px;
+}
+.app-day {
+  margin: 5px 0 11px;
+}
+.app-stops {
+  gap: 10px;
+  margin-bottom: 13px;
+}
+.app-hint {
+  padding: 11px 10px;
+  font-size: 10px;
+}
+.route-map {
+  height: 175px;
+}
+.gold-route {
+  animation: none;
+}
+.map-car {
+  transition: none;
+}
+.phone-showcase figcaption {
+  bottom: 0;
+}
+@media (max-width: 800px) {
+  .journey {
+    height: 340svh;
+  }
+  .journey-sticky {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    min-height: 0;
+    padding: 0;
+  }
+  .journey-topline {
+    top: 87px;
+  }
+  .journey-layout {
+    position: absolute;
+    top: 118px;
+    bottom: 46px;
+    left: 6%;
+    right: 6%;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: 12px;
+    align-items: stretch;
+  }
+  .journey-copy {
+    max-width: 550px;
+    margin: auto;
+    width: 100%;
+  }
+  .journey-tablist {
+    margin-bottom: 16px;
+    gap: 27px !important;
+  }
+  .journey-tab {
+    padding-bottom: 9px !important;
+  }
+  .stage-copy .eyebrow {
+    display: none;
+  }
+  .stage-copy h2 {
+    font-size: clamp(30px, 5.8vw, 42px);
+    line-height: 1.08;
+    margin-bottom: 12px;
+  }
+  .stage-description {
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 72px;
+    max-width: 470px;
+  }
+  .journey-detail,
+  .preview-note {
+    display: none;
+  }
+  .phone-showcase {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+  }
+  .phone-assembly {
+    transform: translate3d(
+        0,
+        calc(22px * (1 - var(--phone-entry)) + var(--phone-lift)),
+        0
+      )
+      rotateY(var(--phone-yaw)) rotateZ(calc(-4deg * (1 - var(--phone-entry))))
+      scale(var(--device-scale));
+  }
+  .phone-showcase figcaption {
+    font-size: 9px;
+    bottom: -1px;
+  }
+  .phone-halo {
+    width: 270px;
+    height: 270px;
+    max-height: 80%;
+  }
+  .floating-note {
+    right: -38px;
+    bottom: 105px;
+  }
+  .journey-progress {
+    position: absolute;
+    left: 6%;
+    right: 6%;
+    bottom: 18px;
+    margin: 0;
+  }
+  .journey-progress i {
+    transform: scaleX(var(--journey-progress));
+  }
+}
+@media (max-width: 480px) {
+  .journey-topline {
+    top: 85px;
+  }
+  .journey-layout {
+    top: 114px;
+    gap: 6px;
+  }
+  .stage-copy h2 {
+    font-size: 32px;
+  }
+  .stage-description {
+    min-height: 72px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .phone-showcase {
+    height: 100%;
+  }
+}
+@media (max-width: 480px) and (max-height: 740px) {
+  .journey-layout {
+    top: 108px;
+    bottom: 39px;
+    gap: 10px;
+  }
+  .stage-copy h2 {
+    font-size: 28px;
+    margin-bottom: 0;
+  }
+  .stage-description,
+  .floating-note {
+    display: none;
+  }
+}
+@media (max-width: 800px) and (max-height: 580px) {
+  .journey-layout {
+    top: 116px;
+    bottom: 35px;
+    grid-template-columns: 53% 47%;
+    grid-template-rows: minmax(0, 1fr);
+    gap: 14px;
+    align-items: center;
+  }
+  .journey-tablist {
+    gap: 14px !important;
+    margin-bottom: 14px;
+  }
+  .stage-copy h2 {
+    font-size: 29px;
+  }
+  .stage-description {
+    font-size: 14px;
+    min-height: 0;
+  }
+  .journey-progress {
+    bottom: 13px;
+  }
+  .floating-note {
+    display: none;
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -1883,20 +2169,55 @@ footer {
     height: 850px;
   }
   .phone-assembly {
-    transform: scale(0.85);
+    transform: scale(var(--device-scale));
+  }
+  .journey-atmosphere,
+  .phone-halo {
+    transform: none;
   }
   .journey-progress i {
     transform: scaleX(1);
   }
   .gold-route {
-    stroke-dashoffset: 0;
+    stroke-dashoffset: 0 !important;
   }
-  .nav-solid {
-    animation: none;
+  .app-scene {
+    opacity: 0;
+    transform: none;
+  }
+  .stage-description {
+    display: block;
+  }
+  [data-stage='0'] .app-scene-0,
+  [data-stage='1'] .app-scene-1,
+  [data-stage='2'] .app-scene-2 {
+    opacity: 1;
+  }
+  .phone-frame:after {
+    display: none;
   }
   @media (max-width: 800px) {
     .journey-sticky {
       height: auto;
+      padding: 90px 6% 55px;
+    }
+    .journey-topline {
+      top: 35px;
+    }
+    .journey-layout {
+      position: relative;
+      inset: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+    .phone-showcase {
+      height: 590px;
+    }
+    .journey-progress {
+      position: relative;
+      inset: auto;
+      margin-top: 30px;
     }
   }
 }

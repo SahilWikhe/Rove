@@ -20,7 +20,7 @@ pnpm start
 
 ## Design and behavior
 
-- A product-led hero presents the illustrative Rove app on black, with a restrained gold glow, staggered title reveals, and gentle scroll motion. The phone stacks below the copy on smaller screens.
+- A product-led hero runs a 24-second illustrative app story: recurring days light up, a simulated tap opens the ride, the map draws and follows the journey, and arrival reveals the return plan. Notifications emerge from the phone and chapter indicators track the loop. Playback pauses offscreen and in hidden tabs; reduced motion shows a static plan. The phone stacks below the copy on smaller screens.
 - A sticky desktop product story: Plan, Ride, and Return. Native page scrolling drives scene changes, and keyboard-accessible tabs can select a scene.
 - A compact sticky sequence on mobile: scrolling scrubs through all three app scenes, with tabs as an alternate control.
 - Reduced-motion support removes parallax and scroll scrubbing while retaining every scene through the tabs.
@@ -31,7 +31,7 @@ pnpm start
 
 ## Content
 
-`app/rove-landing.tsx` contains the page and app concept. `app/globals.css` contains the theme, responsive styles, and motion. `app/layout.tsx` provides metadata.
+`app/rove-landing.tsx` contains the page and scroll-driven app concept. `app/hero-phone.tsx` and `app/hero-phone.css` contain the autonomous hero preview. `app/globals.css` contains the theme, responsive styles, and page motion. `app/layout.tsx` provides metadata.
 
 Set `pilotContactHref` in `app/site-config.ts` to a verified business email link (`mailto:...`) or scheduling URL to enable the “Talk about a pilot” CTA. Until configured, the CTA returns visitors to the experience and does not collect or transmit any information.
 

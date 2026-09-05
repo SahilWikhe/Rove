@@ -1,6 +1,7 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
+@import './hero-phone.css';
 @custom-variant dark (&:is(.dark *));
 @theme inline {
   --color-background: var(--background);
@@ -220,10 +221,6 @@ figure {
 .hero-device > .phone-frame {
   transform: scale(var(--hero-device-scale));
   transform-origin: top left;
-}
-.hero-product .app-scene-0 {
-  opacity: 1;
-  transform: none;
 }
 .hero-product figcaption {
   position: relative;

@@ -25,6 +25,7 @@ import {
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { pilotContactHref } from './site-config';
 import JourneyArtwork from './journey-artwork';
+import HeroPhone from './hero-phone';
 
 const stages = [
   {
@@ -144,7 +145,7 @@ function RouteMap({ stage }: { stage: number }) {
   );
 }
 
-function AppPhone({ previewOnly = false }: { previewOnly?: boolean }) {
+function AppPhone() {
   return (
     <div className="phone-frame" aria-hidden="true">
       <div className="phone-button" />
@@ -167,7 +168,7 @@ function AppPhone({ previewOnly = false }: { previewOnly?: boolean }) {
           </span>
         </div>
         <div className="app-scenes">
-          {(previewOnly ? [0] : [0, 1, 2]).map((stage) => (
+          {[0, 1, 2].map((stage) => (
             <div className={`app-scene app-scene-${stage}`} key={stage}>
               {stage === 0 ? (
                 <>
@@ -597,12 +598,7 @@ export default function RoveLanding() {
               Explore the journey <ArrowDown size={18} />
             </a>
           </div>
-          <figure className="hero-product">
-            <div className="hero-device">
-              <AppPhone previewOnly />
-            </div>
-            <figcaption>ROVE APP · CONCEPT PREVIEW</figcaption>
-          </figure>
+          <HeroPhone />
           <div className="hero-footer">
             <span>PRELAUNCH · NORTH CAROLINA</span>
             <a href="#experience">

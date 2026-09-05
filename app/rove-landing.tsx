@@ -144,7 +144,7 @@ function RouteMap({ stage }: { stage: number }) {
   );
 }
 
-function AppPhone() {
+function AppPhone({ previewOnly = false }: { previewOnly?: boolean }) {
   return (
     <div className="phone-frame" aria-hidden="true">
       <div className="phone-button" />
@@ -167,7 +167,7 @@ function AppPhone() {
           </span>
         </div>
         <div className="app-scenes">
-          {[0, 1, 2].map((stage) => (
+          {(previewOnly ? [0] : [0, 1, 2]).map((stage) => (
             <div className={`app-scene app-scene-${stage}`} key={stage}>
               {stage === 0 ? (
                 <>
@@ -573,17 +573,6 @@ export default function RoveLanding() {
       </header>
       <main id="main">
         <section className="hero" id="top">
-          <div className="hero-image-wrap">
-            <img
-              className="hero-image"
-              src="/rove-journey.webp"
-              alt="A quiet winding road into the North Carolina hills, traced with warm evening light."
-              width="1672"
-              height="941"
-              fetchPriority="high"
-            />
-            <div className="hero-scrim" />
-          </div>
           <div className="hero-copy">
             <p className="eyebrow">
               <span className="status-dot" /> A NEW DIRECTION IN CARE
@@ -608,6 +597,12 @@ export default function RoveLanding() {
               Explore the journey <ArrowDown size={18} />
             </a>
           </div>
+          <figure className="hero-product">
+            <div className="hero-device">
+              <AppPhone previewOnly />
+            </div>
+            <figcaption>ROVE APP · CONCEPT PREVIEW</figcaption>
+          </figure>
           <div className="hero-footer">
             <span>PRELAUNCH · NORTH CAROLINA</span>
             <a href="#experience">

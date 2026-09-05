@@ -20,7 +20,7 @@ pnpm start
 
 ## Design and behavior
 
-- A cinematic, locally stored WebP hero with parallax, staggered title reveals, and scroll-linked lighting.
+- A product-led hero presents the illustrative Rove app on black, with a restrained gold glow, staggered title reveals, and gentle scroll motion. The phone stacks below the copy on smaller screens.
 - A sticky desktop product story: Plan, Ride, and Return. Native page scrolling drives scene changes, and keyboard-accessible tabs can select a scene.
 - A compact sticky sequence on mobile: scrolling scrubs through all three app scenes, with tabs as an alternate control.
 - Reduced-motion support removes parallax and scroll scrubbing while retaining every scene through the tabs.

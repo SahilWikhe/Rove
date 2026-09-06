@@ -29,7 +29,11 @@
     "build/**",
     "dist/**",
     "coverage/**",
-    "next-env.d.ts"
+    "next-env.d.ts",
+    ".vercel/**",
+    ".nitro/**",
+    "playwright-report/**",
+    "test-results/**"
   ],
   "rules": {
     "no-array-constructor": "error",
@@ -52,5 +56,15 @@
     "typescript/no-require-imports": "error",
     "typescript/no-unnecessary-type-constraint": "error",
     "typescript/no-unsafe-function-type": "error"
-  }
+  },
+  "overrides": [
+    {
+      "files": [
+        "app/journey-artwork.tsx"
+      ],
+      "rules": {
+        "nextjs/no-img-element": "off"
+      }
+    }
+  ]
 }

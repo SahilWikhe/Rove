@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { cp, mkdtemp, readFile, rm, stat } from 'node:fs/promises';
+import { cp, mkdtemp, readFile, readdir, rm, stat } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { resolve, join } from 'node:path';
 import { pathToFileURL } from 'node:url';
@@ -8,6 +8,21 @@ const output = resolve('.vercel/output');
 const config = JSON.parse(await readFile(join(output, 'config.json'), 'utf8'));
 assert.equal(config.version, 3, 'Expected Vercel Build Output API v3');
 assert(config.routes.some((route) => route.dest === '/__server'));
+
+// Deployment artifacts must not expose source maps, secrets, or server code.
+const publicFiles = await readdir(join(output, 'static'), { recursive: true });
+for (const file of publicFiles) {
+  assert(
+    !/(^|[/\\])(?:\.env(?:\.|$)|\.git(?:[/\\]|$))|\.(?:map|pem|key|sqlite|db)$/.test(
+      file,
+    ),
+    `Private artifact in public output: ${file}`,
+  );
+  assert(
+    !file.endsWith('.ts') && !file.endsWith('.tsx'),
+    `Application source exposed: ${file}`,
+  );
+}
 
 // Run the packaged function outside the checkout so missing runtime dependencies
 // cannot accidentally resolve from the development node_modules directory.

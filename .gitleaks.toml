@@ -1,0 +1,10 @@
+title = "Rove secret detection"
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "vercel-vcp-token"
+description = "Vercel access token"
+regex = '''\bvcp_[A-Za-z0-9]{40,80}\b'''
+keywords = ["vcp_"]

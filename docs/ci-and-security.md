@@ -27,8 +27,12 @@ permission to upload security results. There is no `pull_request_target` workflo
 Gitleaks and actionlint downloads have pinned versions and SHA-256 checksums. Jobs have timeouts,
 and superseded branch runs are cancelled.
 
-Dependabot proposes weekly npm and Actions updates without automatically merging
-them. React packages update together to avoid renderer version mismatches.
+Dependabot checks for routine version updates monthly and combines them into one
+npm PR and one GitHub Actions PR, with at most one open routine PR per ecosystem.
+React packages remain together in the npm batch. Nothing is automatically merged.
+Security-update groups are separate: when Dependabot security updates are enabled
+in repository settings, they are not delayed by the monthly version-update schedule
+or its open-PR cap. The weekly CI dependency audit remains in place independently.
 
 ## Browser coverage
 

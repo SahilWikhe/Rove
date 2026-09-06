@@ -53,7 +53,7 @@ build activates when `VERCEL=1` or `NITRO_PRESET=vercel`.
 - Supporting page motion includes card entrances, a scroll-lit purpose headline, and an expanding gold closing section with a masked title reveal. Reduced-motion preferences keep all text visible without animation.
 - A custom gold round-trip graphic blends original artwork into the page with moving SVG signals and subtle light sweeps. Its composition stays anchored without cursor tracking or visible playback controls. It pauses offscreen and in hidden tabs and respects reduced-motion settings. See [artwork details](docs/motion-artwork.md).
 - Purpose and audience sections, followed by a North Carolina pilot introduction.
-- No booking, billing, tracking service, analytics, or contact collection. All app screens and journey data are illustrative.
+- No booking, billing, ride tracking service, or contact collection. The website includes Vercel visitor/page-view analytics. All app screens and journey data are illustrative.
 
 ## Content
 
@@ -67,8 +67,14 @@ Set `pilotContactHref` in `app/site-config.ts` to a verified business email link
 
 ## Validation
 
+PR checks cover the production bundle, desktop/mobile browser behavior,
+accessibility, HTTP security, dependency advisories, secret detection, and CodeQL.
+See [CI and security](docs/ci-and-security.md) for the full test matrix, local
+commands, live smoke checks, and the required GitHub merge-protection settings.
+
 ```sh
-pnpm exec tsc --noEmit
+pnpm typecheck
+pnpm test
 pnpm build
 ```
 

@@ -8,6 +8,10 @@ const output = resolve('.vercel/output');
 const config = JSON.parse(await readFile(join(output, 'config.json'), 'utf8'));
 assert.equal(config.version, 3, 'Expected Vercel Build Output API v3');
 assert(config.routes.some((route) => route.dest === '/__server'));
+assert(
+  !config.routes.some((route) => route.middlewarePath),
+  'Security proxy must execute inside the Vinext server, not as Vercel routing middleware',
+);
 
 // Deployment artifacts must not expose source maps, secrets, or server code.
 const publicFiles = await readdir(join(output, 'static'), { recursive: true });

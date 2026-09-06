@@ -1,7 +1,9 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { createSecurityHeaders } from './lib/security';
 
-export function middleware(request: NextRequest) {
+// Vinext bundles this proxy into its server. A root middleware.ts would also
+// be auto-deployed by Vercel's Vite builder as a separate routing middleware.
+export function proxy(request: NextRequest) {
   const bytes = crypto.getRandomValues(new Uint8Array(18));
   const nonce = btoa(String.fromCharCode(...bytes));
   const headers = createSecurityHeaders(

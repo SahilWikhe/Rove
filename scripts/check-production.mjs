@@ -2,7 +2,7 @@
 import assert from 'node:assert/strict';
 import { setTimeout } from 'node:timers/promises';
 
-const origin = 'https://rove-neon.vercel.app';
+const origin = 'https://www.roveride.co';
 const page = await fetch(origin, { signal: AbortSignal.timeout(15_000) });
 assert.equal(page.status, 200, 'Production homepage is unavailable');
 assert.match(await page.text(), /Rove — A better way to get there/);

@@ -58,7 +58,7 @@ The adapter is test infrastructure and is not deployed.
 
 ## Live deployment checks
 
-The separate production smoke workflow runs after a successful GitHub production
+The production origin is `https://www.roveride.co`. The separate production smoke workflow runs after a successful GitHub production
 deployment status, or manually. It checks the public Vercel homepage, security
 headers, and analytics JavaScript. It retries the script GET for activation delays
 and never submits analytics events. It uses the trusted `main` branch and a fixed
@@ -126,6 +126,13 @@ generated UI templates are not part of this lint gate. TypeScript still checks t
 whole TypeScript project. Raw decorative artwork images have a scoped lint exception.
 
 ## Security design and limits
+
+Security request handling lives in `proxy.ts` and is bundled by Vinext into the
+application server. Do not rename it to `middleware.ts`: Vercel's Vite integration
+also detects that filename as standalone platform routing middleware, whose export
+and runtime contract differs from Vinext's. The source-layout regression check
+rejects that collision, and browser tests verify that the bundled proxy still
+provides the nonce policy and write restrictions.
 
 The middleware generates a cryptographically random 144-bit nonce for each HTML
 response, overrides client-supplied CSP headers, and applies a restrictive content

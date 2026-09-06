@@ -18,6 +18,32 @@ pnpm build
 pnpm start
 ```
 
+## Deploy to Vercel
+
+Import `SahilWikhe/Rove`, branch `main`, with the **Vite** preset and root
+directory `./`. Turn off the dashboard's Build Command, Output Directory, and
+Install Command overrides: `vercel.json` supplies the validated settings. The
+install/build commands use the pinned pnpm version so Vercel does not fall back
+to an older package manager that cannot read the lockfile.
+
+No application environment variables or secrets are required. If
+`NITRO_PRESET=vercel` is already set for Production and Preview, it can remain;
+the build script sets it automatically.
+
+```sh
+pnpm install --frozen-lockfile
+pnpm build:vercel
+pnpm verify:vercel
+```
+
+The Vercel build uses Nitro and produces the Build Output API bundle in
+`.vercel/output`, including static assets and a server function. Do not set the
+output directory to `.output` or `dist`.
+
+The normal `pnpm dev`, `pnpm build`, and `pnpm start` commands retain the existing
+Sites/Cloudflare workflow when `VERCEL` and `NITRO_PRESET` are unset. The Vercel
+build activates when `VERCEL=1` or `NITRO_PRESET=vercel`.
+
 ## Design and behavior
 
 - A product-led hero runs a 24-second illustrative app story: recurring days light up, a simulated tap opens the ride, the map draws and follows the journey, and arrival reveals the return plan. Notifications emerge from the phone and chapter indicators track the loop. Playback pauses offscreen and in hidden tabs; reduced motion shows a static plan. The phone stacks below the copy on smaller screens.

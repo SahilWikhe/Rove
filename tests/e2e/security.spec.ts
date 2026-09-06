@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test('HTML has fresh nonces, restrictive headers, and no reusable shared cache', async ({
   request,
+  page,
 }) => {
   const first = await request.get('/');
   const second = await request.get('/', {
@@ -29,14 +30,17 @@ test('HTML has fresh nonces, restrictive headers, and no reusable shared cache',
   expect(headers['referrer-policy']).toBe('strict-origin-when-cross-origin');
   expect(headers['cache-control']).toContain('no-store');
   const html = await first.text();
-  const inlineScripts = [
-    ...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/g),
-  ].filter(
-    ([, attributes, text]) => !attributes.includes('src=') && text.trim(),
-  );
-  expect(inlineScripts.length).toBeGreaterThan(0);
-  for (const [, attributes] of inlineScripts)
-    expect(attributes).toContain(`nonce="${nonce}"`);
+  // An inert browser parser handles HTML syntax without executing the scripts.
+  const inlineNonces = await page.evaluate((source) => {
+    const parsed = new DOMParser().parseFromString(source, 'text/html');
+    return Array.from(parsed.querySelectorAll('script'))
+      .filter(
+        (script) => !script.hasAttribute('src') && script.textContent.trim(),
+      )
+      .map((script) => script.nonce);
+  }, html);
+  expect(inlineNonces.length).toBeGreaterThan(0);
+  for (const scriptNonce of inlineNonces) expect(scriptNonce).toBe(nonce);
 });
 
 test('read-only site rejects write methods and action-shaped requests', async ({

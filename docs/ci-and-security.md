@@ -11,14 +11,14 @@ pushes to `main`, merge queues, manual dispatch, and a weekly schedule. The week
 run catches newly disclosed dependency issues even when nobody changes the code.
 Documentation changes run the same checks so a required status is never missing.
 
-| Check                           | Coverage                                                                                                                                                | Failure behavior                                                                                                                      |
-| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| Quality and dependency security | TypeScript, lint, formatting, actionlint workflow validation, security-policy/workflow unit tests, full dependency audit                                | Blocks on test errors or moderate/high/critical advisories, including development dependencies                                        |
-| Vercel build and browser tests  | Production build, isolated packaged function, HTML/RSC/404 handling, assets, public artifact exposure, Chromium desktop/Android and WebKit iPhone tests | Blocks on any build or test failure; saves failure screenshots/traces and the HTML report for seven days                              |
-| Sites compatibility build       | Existing Cloudflare/Sites build                                                                                                                         | Blocks on build failure                                                                                                               |
-| Secret scan                     | Gitleaks default rules plus Vercel token detection across complete Git history                                                                          | Blocks on detected secrets; output is redacted                                                                                        |
-| CodeQL security analysis        | Extended JavaScript/TypeScript security queries                                                                                                         | Blocks if analysis fails; findings appear in GitHub code scanning. Enable the code-scanning ruleset below to block merges on findings |
-| CI required                     | All five jobs above                                                                                                                                     | Fails if any job fails, is cancelled, or is skipped                                                                                   |
+| Check                           | Coverage                                                                                                                                                | Failure behavior                                                                                                                                 |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Quality and dependency security | TypeScript, lint, formatting, actionlint workflow validation, security-policy/workflow/CodeQL-gate unit tests, full dependency audit                    | Blocks on test errors or moderate/high/critical advisories, including development dependencies                                                   |
+| Vercel build and browser tests  | Production build, isolated packaged function, HTML/RSC/404 handling, assets, public artifact exposure, Chromium desktop/Android and WebKit iPhone tests | Blocks on any build or test failure; saves failure screenshots/traces and the HTML report for seven days                                         |
+| Sites compatibility build       | Existing Cloudflare/Sites build                                                                                                                         | Blocks on build failure                                                                                                                          |
+| Secret scan                     | Gitleaks default rules plus Vercel token detection across complete Git history                                                                          | Blocks on detected secrets; output is redacted                                                                                                   |
+| CodeQL security analysis        | Extended JavaScript/TypeScript security queries                                                                                                         | Blocks on failed analysis, missing reports, or any high/critical finding (SARIF security score ≥7); findings also appear in GitHub code scanning |
+| CI required                     | All five jobs above                                                                                                                                     | Fails if any job fails, is cancelled, or is skipped                                                                                              |
 
 PR jobs do not deploy and do not receive a Vercel token or other application
 secrets. Actions are pinned to full commit SHAs. Checkout does not persist Git
@@ -79,7 +79,8 @@ has run, create an active GitHub ruleset targeting `main`:
 
 1. Require a pull request before merging; block force pushes and branch deletion.
 2. Require the **CI required** status check, and require the branch to be up to date.
-3. Require CodeQL code scanning results and block high/critical security findings.
+3. Also require CodeQL code scanning results for an additional GitHub-managed gate.
+   High/critical findings already fail `CI required` through the SARIF check.
 4. Avoid unrestricted bypass actors. Set reviewer requirements to match the team;
    a one-person project cannot approve its own pull requests.
 5. Keep secret scanning and push protection enabled (both were already enabled).

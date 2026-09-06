@@ -12,6 +12,7 @@
 /coverage
 /playwright-report/
 /test-results/
+/codeql-results/
 
 # next.js
 /.next/

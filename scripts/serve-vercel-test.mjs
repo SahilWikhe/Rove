@@ -1,6 +1,6 @@
 // Loopback-only test adapter for the actual packaged Vercel function and assets.
 import { createServer } from 'node:http';
-import { readFile, stat } from 'node:fs/promises';
+import { readFile, open } from 'node:fs/promises';
 import { resolve, sep, extname, join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
@@ -31,16 +31,20 @@ const server = createServer(async (incoming, outgoing) => {
       file.startsWith(`${staticRoot}${sep}`) &&
       ['GET', 'HEAD'].includes(incoming.method)
     ) {
-      const info = await stat(file).catch(() => null);
-      if (info?.isFile()) {
-        outgoing.writeHead(200, {
-          'Content-Type': types[extname(file)] || 'application/octet-stream',
-          'X-Content-Type-Options': 'nosniff',
-        });
-        outgoing.end(
-          incoming.method === 'HEAD' ? undefined : await readFile(file),
-        );
-        return;
+      const handle = await open(file, 'r').catch(() => null);
+      try {
+        if (handle && (await handle.stat()).isFile()) {
+          const body =
+            incoming.method === 'HEAD' ? undefined : await handle.readFile();
+          outgoing.writeHead(200, {
+            'Content-Type': types[extname(file)] || 'application/octet-stream',
+            'X-Content-Type-Options': 'nosniff',
+          });
+          outgoing.end(body);
+          return;
+        }
+      } finally {
+        await handle?.close();
       }
     }
     // Buffer the small test payloads before invoking middleware: rejecting a
